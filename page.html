@@ -34,6 +34,7 @@
         padding: 8px;
         font-size: 1.2rem;
       }
+
       table {
         border: 1px solid black;
         border-radius: 6px;
@@ -58,6 +59,7 @@
           style="flex: 1"
           id="input"
           onkeydown="if(event.key==='Enter' && !event.repeat && event.ctrlKey) sendQuery()"
+          placeholder="Enter your SQL query here"
         ></textarea>
         <div>
           <button onclick="ws.send(input.value)">Run</button>
@@ -65,7 +67,7 @@
       </div>
       <div style="margin-top: 1rem"><button onclick="listTables()">List tables</button></div>
       <h2>Result</h2>
-      <div id="result" style="width: 100%"></div>
+      <div id="result" style="width: 100%; overflow-x: auto; padding: 1rem"></div>
     </div>
     <script>
       function sendQuery() {

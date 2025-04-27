@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      button {
+        padding: 0.75rem;
+        background-color: #111;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #222;
+      }
+
+      textarea {
+        resize: vertical;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 1.2rem;
+      }
+      table {
+        border: 1px solid black;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 1.2rem;
+        gap: 0;
+        max-width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        overflow-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="padding: 2rem; width: 100%">
+      <div style="display: flex; gap: 2rem; font-size: large">
+        <textarea
+          style="flex: 1"
+          id="input"
+          onkeydown="if(event.key==='Enter' && !event.repeat && event.ctrlKey) sendQuery()"
+        ></textarea>
+        <div>
+          <button onclick="ws.send(input.value)">Run</button>
+        </div>
+      </div>
+      <h2>Result</h2>
+      <div id="result" style="width: 100%"></div>
+    </div>
+    <script>
+      function sendQuery() {
+        ws.send(input.value);
+      }
+      const MAX_VALUE_LENGTH = 50;
+
+      const result = document.getElementById('result');
+      const ws = new WebSocket('ws://localhost:1434');
+      let input = document.getElementById('input');
+      ws.addEventListener('message', (e) => {
+        const data = JSON.parse(e.data);
+        if (typeof data === 'string') {
+          // its an error probably
+          result.innerHTML = `<span style="color: #e00;font-weight:bold">${data}</span>`;
+        } else {
+          if (data.length && data.length === 0) {
+            result.innerHTML = `(empty)`;
+          } else {
+            const table = document.createElement('table');
+            const header = document.createElement('tr');
+            for (const key in data[0]) {
+              const th = document.createElement('th');
+              th.innerText = key;
+              header.appendChild(th);
+            }
+            table.appendChild(header);
+            for (const row of data) {
+              const tr = document.createElement('tr');
+              for (const key in row) {
+                const td = document.createElement('td');
+                let value = row[key];
+                if (value === null) {
+                  td.innerText = '(null)';
+                } else {
+                  value = value.toString();
+                  td.innerText =
+                    value.length > MAX_VALUE_LENGTH
+                      ? value.slice(0, MAX_VALUE_LENGTH) + '...'
+                      : value;
+                }
+                tr.appendChild(td);
+              }
+              table.appendChild(tr);
+            }
+            result.replaceChildren(table);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

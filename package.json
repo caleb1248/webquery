@@ -2,6 +2,9 @@
   "name": "webquery",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "build": "bun build.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

@@ -1,6 +1,6 @@
 # WebQuery
 
-A simple to query your postgres database.
+A simple web ui to query your postgres database.
 
 ## How to run
 
@@ -16,4 +16,6 @@ bun install
 bun run index.ts
 ```
 
-3. Follow the instructions in the terminal
+3. Follow the instructions in the terminal. It will prompt your for the database name, and the username and password of a user that has access to the database. Make sure your postgres server is running on `localhost:5432`. Other hosts or ports are currently unsupported.
+
+> Note: You can also run `bun run build` to compile the project into a single file executable, which you can then move into your path or bin directory, allowing you to run WebQuery from anywhere.

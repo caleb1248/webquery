@@ -30,8 +30,11 @@ function prompt(prompt: string, mute?: boolean): Promise<string> {
     });
   });
 }
+
 export default {
   username: await prompt('Enter username:'),
   password: await prompt('Enter password:', true),
   database: await prompt('Enter database name:'),
 };
+
+reader.close();

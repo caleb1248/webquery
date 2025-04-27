@@ -1,8 +1,8 @@
 import config from './config';
+import { SQL, file, serve } from 'bun';
+const sql = new SQL({ ...config, url: 'postgres://localhost:5432' });
 
-const sql = new Bun.SQL({ ...config, url: 'postgres://localhost:5432' });
-
-const server = Bun.serve({
+const server = serve({
   port: 1434,
   async fetch(req, server) {
     const url = new URL(req.url).pathname;
@@ -10,7 +10,7 @@ const server = Bun.serve({
       return;
     }
     if (url === '/') {
-      return new Response(Bun.file('./page.html'));
+      return new Response(file('./page.html'), { headers: { 'Content-Type': 'text/html' } });
     } else {
       return new Response('Not Found', { status: 404 });
     }

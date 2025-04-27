@@ -1,8 +1,8 @@
 import config from './config';
-console.log('your config:', config);
+
 const sql = new Bun.SQL({ ...config, url: 'postgres://localhost:5432' });
 
-Bun.serve({
+const server = Bun.serve({
   port: 1434,
   async fetch(req, server) {
     const url = new URL(req.url).pathname;
@@ -27,3 +27,5 @@ Bun.serve({
     },
   },
 });
+
+console.log(`\nServer running on http://${server.hostname}:${server.port}`);

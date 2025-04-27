@@ -1,22 +1,37 @@
 import { createInterface } from 'readline/promises';
+import { Writable } from 'stream';
 
-const reader = createInterface(process.stdin, process.stdout);
+let muted = false;
 
-function prompt(prompt: string, defaultAnswer?: string): Promise<string> {
-  reader.setPrompt(
-    `\x1b[1;36m${prompt}\x1b[0;34m${defaultAnswer ? ` (${defaultAnswer})` : ''}\x1b[0m `
-  );
+const mutableStdout = new Writable({
+  write(chunk, encoding, callback) {
+    if (!muted) process.stdout.write(chunk, encoding);
+    callback();
+  },
+});
+
+const reader = createInterface({
+  input: process.stdin,
+  output: mutableStdout,
+  terminal: true,
+});
+
+function prompt(prompt: string, mute?: boolean): Promise<string> {
+  reader.setPrompt(`\x1b[1;36m${prompt}\x1b[0m `);
   reader.prompt();
+  if (mute) muted = true;
   return new Promise((resolve) => {
     reader.once('line', (line) => {
+      muted = false;
       const trimmed = line.trim();
+      if (mute) console.log();
       reader.setPrompt('');
-      resolve(trimmed || !defaultAnswer ? trimmed : defaultAnswer);
+      resolve(trimmed);
     });
   });
 }
 export default {
-  username: await prompt('Username?'),
-  password: await prompt('Password?'),
-  database: await prompt('Database?'),
+  username: await prompt('Enter username:'),
+  password: await prompt('Enter password:', true),
+  database: await prompt('Enter database name:'),
 };

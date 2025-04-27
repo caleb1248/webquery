@@ -1,15 +1,19 @@
-# webquery
+# WebQuery
 
-To install dependencies:
+A simple to query your postgres database.
+
+## How to run
+
+1. First, install dependencies
 
 ```bash
 bun install
 ```
 
-To run:
+2. Then start the program.
 
 ```bash
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.1.29. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+3. Follow the instructions in the terminal

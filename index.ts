@@ -7,7 +7,6 @@ Bun.serve({
   async fetch(req, server) {
     const url = new URL(req.url).pathname;
     if (server.upgrade(req)) {
-      console.log('upgraded!');
       return;
     }
     if (url === '/') {
@@ -20,11 +19,9 @@ Bun.serve({
   websocket: {
     async message(ws, message) {
       try {
-        console.log('Received message:', message.toString());
         const result = await sql.unsafe(message.toString());
         ws.send(JSON.stringify(result));
       } catch (e) {
-        console.log('Error:', e);
         ws.send(JSON.stringify('Error: ' + e!.toString()));
       }
     },

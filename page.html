@@ -76,7 +76,9 @@
       const MAX_VALUE_LENGTH = 50;
 
       const result = document.getElementById('result');
-      const ws = new WebSocket('ws://localhost:1434');
+      const ws = new WebSocket(
+        `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/`
+      );
       let input = document.getElementById('input');
       ws.addEventListener('message', (e) => {
         const data = JSON.parse(e.data);
